@@ -1,5 +1,5 @@
 from pydantic import BaseModel, constr
-from datetime import date
+from datetime import date, time
 from typing import Optional
 
 class User(BaseModel):
@@ -12,3 +12,18 @@ class User(BaseModel):
     punya_keluarga: Optional[bool] = None
     agama: Optional[str] = None
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class NoteCreate(BaseModel):
+    hari: str | None = None
+    jam: str | None = None   # format "HH:MM:SS"
+    judul_note: str
+    description_note: str | None = None
+
+class NoteUpdate(BaseModel):
+    hari: Optional[str] = None
+    jam: Optional[time] = None
+    judul_note: Optional[str] = None
+    description_note: Optional[str] = None

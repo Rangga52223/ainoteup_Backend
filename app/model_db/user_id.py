@@ -1,9 +1,11 @@
 from sqlalchemy import Column, Integer, String, Date, Interval, Boolean
 from app.database.database import Base
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 class User(Base):
     __tablename__ = "users"
 
-    user_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_name = Column(String(100), nullable=False, unique=True)
     password = Column(String(200), nullable=False)
     tanggal_lahir = Column(Date, nullable=False)
