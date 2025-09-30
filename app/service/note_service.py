@@ -64,3 +64,23 @@ def edit_note(note_id, payload, current_user):
     db.commit()
     db.refresh(note)
     return {"message": "Note berhasil diupdate", "note": note}
+
+def delete_note(
+    note_id,
+    user_id, 
+):
+    note = db.query(Note).filter(
+        Note.id_note == note_id,
+        Note.id_user == user_id
+    ).first()
+
+    if not note:
+        raise HTTPException(
+            status_code=404,
+            detail="Note tidak ditemukan atau bukan milik user"
+        )
+
+    db.delete(note)
+    db.commit()
+
+    return {"message": "Note berhasil dihapus"}
