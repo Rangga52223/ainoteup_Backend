@@ -1,14 +1,14 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Depends
+from fastapi import APIRouter
 
 note = APIRouter(
     prefix="/api/v1/note",
     tags=["notepad"]
 )
 
-ai = APIRouter(
-    prefix="/api/v1/ask",
-    tags=["ask_AI"]
-)
+# ai = APIRouter(
+#     prefix="/api/v1/ask",
+#     tags=["ask_AI"]
+# )
 
 authen = APIRouter(
     prefix="/api/v1/auth",

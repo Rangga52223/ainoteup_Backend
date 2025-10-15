@@ -1,7 +1,8 @@
 from app.route import note
-from fastapi import Depends, HTTPException
+from fastapi import Depends
+from app.response.base_response import error_response
 from app.middleware.auth import session_checking
-from app.service.note_service import get_notes, create_note, edit_note, delete_note
+from app.service.note_service import get_notes, create_note, edit_note, delete_note, get_note_detail
 from app.helper.pydantict_helper import NoteCreate, NoteUpdate
 from uuid import UUID
 
@@ -11,7 +12,7 @@ async def get_note_route(user: str = Depends(session_checking)):
         return get_notes(user)
     except Exception as e:
         print(f'Debug_Error:{str(e)}')
-        return HTTPException(status_code=400, detail=f'Error di get_notes_route:{str(e)}')
+        return error_response(404, f'Error di get_notes_route:{str(e)}')
 
 @note.post('/add-note')
 async def add_note_route(note: NoteCreate, user: str = Depends(session_checking)):
@@ -19,7 +20,7 @@ async def add_note_route(note: NoteCreate, user: str = Depends(session_checking)
         return create_note(note, user)
     except Exception as e:
         print(f'Debug_Error:{str(e)}')
-        return HTTPException(status_code=400, detail=f'Error di add_note_route:{str(e)}')
+        return error_response(404, f'Error di add_note_route:{str(e)}')
     
 @note.put('/edit-note/{note_id}')
 async def edit_note_route(note_id: UUID, note_data:NoteUpdate, user = Depends(session_checking)):
@@ -27,7 +28,7 @@ async def edit_note_route(note_id: UUID, note_data:NoteUpdate, user = Depends(se
         return edit_note(note_id, note_data, user)
     except Exception as e:
         print(f'Debug_Error:{str(e)}')
-        return HTTPException(status_code=400, detail=f'Error di edit_note_route:{str(e)}')
+        return error_response(404, f'Error di edit_note_route:{str(e)}')
     
 @note.delete('/delete-note/{note_id}')
 async def delete_note_route(note_id: UUID, user = Depends(session_checking)):
@@ -35,4 +36,12 @@ async def delete_note_route(note_id: UUID, user = Depends(session_checking)):
         return delete_note(note_id, user)
     except Exception as e:
         print(f'Debug_Error:{str(e)}')
-        return HTTPException(status_code=400, detail=f'Error di delete_note_route:{str(e)}')
+        return error_response(http_status=404, message=f"Error di delete_note_route: {str(e)}")
+    
+@note.get('/detail-note/{note_id}')
+async def get_note_detail_route(note_id: UUID, user: str = Depends(session_checking)):
+    try:
+        return get_note_detail(note_id, user)
+    except Exception as e:
+        print(f'Debug_Error:{str(e)}')
+        return error_response(404, f'Error di get_note_detail_route:{str(e)}')
