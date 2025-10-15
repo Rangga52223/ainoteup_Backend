@@ -11,7 +11,8 @@ import uuid
 db = SessionLocal()
 
 # --- ADDED: password context ---
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# gunakan bcrypt_sha256 supaya panjang password >72 bytes ditangani (pre-hash dengan sha256)
+pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
@@ -27,7 +28,11 @@ def register(user):
             raise HTTPException(status_code=400, detail="Username already exists")
 
         # hash password sebelum disimpan
-        hashed_password = pwd_context.hash(user.password)
+        try:
+            hashed_password = pwd_context.hash(user.password)
+        except Exception as e:
+            print(f"Password hashing error: {e}")
+            return error_response(http_status=500, message="Password hashing failed")
 
         # buat instance dari model User (SQLAlchemy)
         new_user = User(
@@ -62,8 +67,12 @@ def login(request):
         return error_response(http_status=401, message="Invalid username or password")
 
     # verifikasi password hash
-    if not pwd_context.verify(request.password, user.password):
-        return error_response(http_status=401, message="Invalid username or password")
+    try:
+        if not pwd_context.verify(request.password, user.password):
+            return error_response(http_status=401, message="Invalid username or password")
+    except Exception as e:
+        print(f"Password verify error: {e}")
+        return error_response(http_status=500, message="Password verify failed")
 
     # Token hanya simpan user_id + exp
     access_token = create_access_token(
