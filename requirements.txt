@@ -5,4 +5,3 @@ python-jose[cryptography]==3.5.0
 passlib==1.7.4
 psycopg2==2.9.10
 bcrypt==5.0.0
-langchain_community==0.3.29
