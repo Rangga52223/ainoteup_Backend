@@ -69,8 +69,141 @@ table untuk menyimpan note yang sudah di buat oleh user
 - alembic==1.13.1
 
 ---
+## 🔥 LIST API Endpoint & Request payload
+### Register
+- https://ainoteup-backend.vercel.app/api/v1/auth/register
+request
+```json
+{
+  "username": "maksud1",
+  "password": "rahasia123",
+  "tanggal_lahir": "2001-05-17",
+  "pekerjaan": "Mahasiswa",
+  "jam_tidur": "23:00",
+  "jam_kerja": "08:00-16:00",
+  "punya_keluarga": true,
+  "agama": "Islam"
+}
+```
+response
+```json
+{
+    "success": true,
+    "message": "User registered successfully",
+    "data": null
+}
+```
+### login
+- https://ainoteup-backend.vercel.app/api/v1/auth/login
+request
+```json
+{
+  "username": "maksud1",
+  "password": "rahasia123"
+}
+```
+response
+```json
+{
+    "success": true,
+    "message": "login sukses",
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjEyYzczOTktZDhhNy00NmI1LThmYjYtOTA2MDk4MTBkMGE0IiwiZXhwIjoxNzYwNTU3NjY0fQ.aZ1hJzb_S2QH_0LCz-PCS6O4Cg0TnalZ00V1K22KhvQ",
+    "user_id": "f12c7399-d8a7-46b5-8fb6-90609810d0a4"
+}
+```
+#### ⚠ Pakai Token Bearer di authentikasi untuk akses endpoint di bawah ini
+### Ambil Semua Note
+- https://ainoteup-backend.vercel.app/api/v1/note/
+- GET
+request
+```json
 
+```
+response
+```json
+{
+    "success": true,
+    "message": "Notes retrieved",
+    "data": {
+        "userId": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
+        "notes": [
+            {
+                "idNote": "bc3802d0-08c8-4cef-bf66-f4e616ea074b",
+                "idUser": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
+                "hari": 5,
+                "jam": "10:00:00",
+                "judulNote": "Rapat penggunaan Uang Perusahaan",
+                "descriptionNote": "Membahas tentang Kemajuan Perusahann",
+                "createAt": "2025-10-15T18:49:48.191561"
+            },
+            {
+                "idNote": "391866be-ff3f-4451-ac23-7cfa0032f812",
+                "idUser": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
+                "hari": 4,
+                "jam": "10:00:00",
+                "judulNote": "Rapat penggunaan Uang Perusahaan",
+                "descriptionNote": "Membahas tentang Kemajuan Perusahann",
+                "createAt": "2025-10-15T18:53:34.945134"
+            }
+        ]
+    }
+}
+```
+### ambil detail note
+- https://ainoteup-backend.vercel.app/api/v1/note/detail-note/{id_note}
+- GET
+request
+```json
 
-   ```
+```
+response
+```json
+{
+    "success": true,
+    "message": "Note detail retrieved",
+    "data": {
+        "note": {
+            "idNote": "391866be-ff3f-4451-ac23-7cfa0032f812",
+            "idUser": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
+            "hari": 4,
+            "jam": "10:00:00",
+            "judulNote": "Rapat penggunaan Uang Perusahaan",
+            "descriptionNote": "Membahas tentang Kemajuan Perusahann",
+            "createAt": "2025-10-15T18:53:34.945134"
+        }
+    }
+}
+```
+### ambil detail note
+- https://ainoteup-backend.vercel.app/api/v1/note/add-note
+- POST
+request
+```json
+{
+  "hari": "4",
+  "jam": "10:00:00",
+  "judul_note": "Rapat penggunaan Uang Perusahaan",
+  "description_note": "Membahas tentang Kemajuan Perusahann"
+}
+```
+response
+```json
+{
+    "success": true,
+    "message": "Note berhasil dibuat",
+    "data": {
+        "note": {
+            "idNote": "391866be-ff3f-4451-ac23-7cfa0032f812",
+            "idUser": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
+            "hari": 4,
+            "jam": "10:00:00",
+            "judulNote": "Rapat penggunaan Uang Perusahaan",
+            "descriptionNote": "Membahas tentang Kemajuan Perusahann",
+            "createAt": "2025-10-15T18:53:34.945134"
+        }
+    }
+}
+```
+
 ## 📄 Lisensi
 MIT License – bebas digunakan dan dimodifikasi.
