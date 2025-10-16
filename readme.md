@@ -1,62 +1,70 @@
-# 🛠 AINoteUP/NoteUP 
+# 🛠 AINoteUP / NoteUP
 
-AINoteUP/NoteUP adalah sebuah aplikasi web yang saya buat untuk otomatisasi pembuatan note harian, fitur AI masih belum tersedia. terimakasih
+AINoteUP / NoteUP adalah aplikasi web untuk otomatisasi pembuatan catatan harian. Fitur AI belum tersedia saat ini.
 
 ---
 
-## 📦 Instalasi & Requirement
+## 📦 Instalasi & Persyaratan
 
-### 1. Persiapan Environment Lokal
-Pastikan sudah terinstall:
-- **Python 3.10+**
-- **FastApi** 
-- **PostgreSql** 
+### Persyaratan
+- Python 3.10+
+- PostgreSQL
+- (Opsional) Docker
 
-
-### 2. Cara Instalasi
-Clone repository dan install dependency:
-
+### Langkah instalasi
+1. Clone repository:
 ```bash
-git clone https://github.com/Rangga52223/ainoteup_Backend
-cd /ainoteup_Backend
-# (Opsional) Buat virtual environment
-python -m venv venv
-source venv/bin/activate   # Linux / Mac
-venv\Scripts\activate      # Windows
-
-# Install dependencies
-pip install -r requirements.txt
-
+git clone https://github.com/Rangga52223/ainoteup_Backend.git
+cd ainoteup_Backend
 ```
 
-Jalankan aplikasi:
+2. (Opsional) Buat dan aktifkan virtual environment:
+```bash
+# Linux / macOS
+python -m venv venv
+source venv/bin/activate
+
+# Windows (PowerShell)
+python -m venv venv
+venv\Scripts\Activate.ps1
+```
+
+3. Install dependency:
+```bash
+pip install -r requirements.txt
+```
+
+4. Buat file .env dan atur variabel lingkungan (contoh: DATABASE_URL).
+
+5. Jalankan aplikasi:
 ```bash
 python run.py
-
-#Kamu bisa menjalankan lewat DOCKER
-
-#Jangan lupa setting link Database nya
+# atau (jika menggunakan uvicorn)
+uvicorn run:app --reload
 ```
-Jika pakai docker:
+
+#### Menggunakan Docker
+Build image:
 ```bash
-docker build -t AInoteup .
+docker build -t ainoteup-backend .
+```
+Jalankan container (contoh):
+```bash
+docker run -e DATABASE_URL="postgres://user:pass@host:5432/db" -p 8000:8000 ainoteup-backend
 ```
 
 ---
 
 ## 🗄 Desain Database
 
-**Database saya menggunakan 2 table**<br>
+Database menggunakan dua tabel utama:
 
-**-Table users**
-table yang berisi informasi user seperti tanggal lahir, agama dll
+- users — menyimpan data pengguna (username, tanggal_lahir, pekerjaan, dll.)
+- notes — menyimpan catatan pengguna (hari, jam, judul, deskripsi, created_at)
 
-**-Table Note**
-table untuk menyimpan note yang sudah di buat oleh user
+---
 
-
-
-## 📚 Library & Framework yang Digunakan
+## 📚 Dependensi utama
 
 - uvicorn==0.36.0
 - fastapi==0.117.1
@@ -69,23 +77,29 @@ table untuk menyimpan note yang sudah di buat oleh user
 - alembic==1.13.1
 
 ---
-## 🔥 LIST API Endpoint & Request payload
+
+## 🔥 API Endpoints (Ringkasan)
+
+Base URL: https://ainoteup-backend.vercel.app/api/v1
+
+Catatan: Gunakan Bearer Token pada header Authorization untuk endpoint yang membutuhkan otentikasi.
+
 ### Register
-- https://ainoteup-backend.vercel.app/api/v1/auth/register
-request
+- POST /auth/register
+Request:
 ```json
 {
-  "username": "maksud1",
-  "password": "rahasia123",
-  "tanggal_lahir": "2001-05-17",
-  "pekerjaan": "Mahasiswa",
-  "jam_tidur": "23:00",
-  "jam_kerja": "08:00-16:00",
-  "punya_keluarga": true,
-  "agama": "Islam"
+    "username": "maksud1",
+    "password": "rahasia123",
+    "tanggal_lahir": "2001-05-17",
+    "pekerjaan": "Mahasiswa",
+    "jam_tidur": "23:00",
+    "jam_kerja": "08:00-16:00",
+    "punya_keluarga": true,
+    "agama": "Islam"
 }
 ```
-response
+Response:
 ```json
 {
     "success": true,
@@ -93,117 +107,168 @@ response
     "data": null
 }
 ```
-### login
-- https://ainoteup-backend.vercel.app/api/v1/auth/login
-request
+
+### Login
+- POST /auth/login
+Request:
 ```json
 {
-  "username": "maksud1",
-  "password": "rahasia123"
+    "username": "maksud1",
+    "password": "rahasia123"
 }
 ```
-response
+Response:
 ```json
 {
     "success": true,
     "message": "login sukses",
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjEyYzczOTktZDhhNy00NmI1LThmYjYtOTA2MDk4MTBkMGE0IiwiZXhwIjoxNzYwNTU3NjY0fQ.aZ1hJzb_S2QH_0LCz-PCS6O4Cg0TnalZ00V1K22KhvQ",
-    "user_id": "f12c7399-d8a7-46b5-8fb6-90609810d0a4"
+    "access_token": "...",
+    "user_id": "f12c7399-..."
 }
 ```
-#### ⚠ Pakai Token Bearer di authentikasi untuk akses endpoint di bawah ini
-### Ambil Semua Note
-- https://ainoteup-backend.vercel.app/api/v1/note/
-- GET
-request
-```json
 
-```
-response
+### Ambil Semua Note
+- GET /note/
+Request: (Bearer token)
+Response contoh:
 ```json
 {
     "success": true,
     "message": "Notes retrieved",
     "data": {
-        "userId": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
+        "userId": "f12c7399-...",
         "notes": [
             {
-                "idNote": "bc3802d0-08c8-4cef-bf66-f4e616ea074b",
-                "idUser": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
+                "idNote": "bc3802d0-...",
+                "idUser": "f12c7399-...",
                 "hari": 5,
                 "jam": "10:00:00",
                 "judulNote": "Rapat penggunaan Uang Perusahaan",
-                "descriptionNote": "Membahas tentang Kemajuan Perusahann",
+                "descriptionNote": "Membahas tentang Kemajuan Perusahaan",
                 "createAt": "2025-10-15T18:49:48.191561"
-            },
-            {
-                "idNote": "391866be-ff3f-4451-ac23-7cfa0032f812",
-                "idUser": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
-                "hari": 4,
-                "jam": "10:00:00",
-                "judulNote": "Rapat penggunaan Uang Perusahaan",
-                "descriptionNote": "Membahas tentang Kemajuan Perusahann",
-                "createAt": "2025-10-15T18:53:34.945134"
             }
         ]
     }
 }
 ```
-### ambil detail note
-- https://ainoteup-backend.vercel.app/api/v1/note/detail-note/{id_note}
-- GET
-request
-```json
 
-```
-response
+### Ambil Detail Note
+- GET /note/detail-note/{id_note}
+Request: (Bearer token)
+Response contoh:
 ```json
 {
     "success": true,
     "message": "Note detail retrieved",
     "data": {
         "note": {
-            "idNote": "391866be-ff3f-4451-ac23-7cfa0032f812",
-            "idUser": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
+            "idNote": "391866be-...",
+            "idUser": "f12c7399-...",
             "hari": 4,
             "jam": "10:00:00",
             "judulNote": "Rapat penggunaan Uang Perusahaan",
-            "descriptionNote": "Membahas tentang Kemajuan Perusahann",
-            "createAt": "2025-10-15T18:53:34.945134"
-        }
-    }
-}
-```
-### ambil detail note
-- https://ainoteup-backend.vercel.app/api/v1/note/add-note
-- POST
-request
-```json
-{
-  "hari": "4",
-  "jam": "10:00:00",
-  "judul_note": "Rapat penggunaan Uang Perusahaan",
-  "description_note": "Membahas tentang Kemajuan Perusahann"
-}
-```
-response
-```json
-{
-    "success": true,
-    "message": "Note berhasil dibuat",
-    "data": {
-        "note": {
-            "idNote": "391866be-ff3f-4451-ac23-7cfa0032f812",
-            "idUser": "f12c7399-d8a7-46b5-8fb6-90609810d0a4",
-            "hari": 4,
-            "jam": "10:00:00",
-            "judulNote": "Rapat penggunaan Uang Perusahaan",
-            "descriptionNote": "Membahas tentang Kemajuan Perusahann",
+            "descriptionNote": "Membahas tentang Kemajuan Perusahaan",
             "createAt": "2025-10-15T18:53:34.945134"
         }
     }
 }
 ```
 
+### Tambah Note
+- POST /note/add-note
+Request (Bearer token):
+```json
+{
+    "hari": "4",
+    "jam": "10:00:00",
+    "judul_note": "Rapat penggunaan Uang Perusahaan",
+    "description_note": "Membahas tentang Kemajuan Perusahaan"
+}
+```
+Response contoh:
+```json
+{
+    "success": true,
+    "message": "Note berhasil dibuat",
+    "data": {
+        "note": {
+            "idNote": "391866be-...",
+            "idUser": "f12c7399-...",
+            "hari": 4,
+            "jam": "10:00:00",
+            "judulNote": "Rapat penggunaan Uang Perusahaan",
+            "descriptionNote": "Membahas tentang Kemajuan Perusahaan",
+            "createAt": "2025-10-15T18:53:34.945134"
+        }
+    }
+}
+```
+
+### Edit Note
+- PUT /note/edit-note/{id-note}
+Request (Bearer token):
+```json
+{
+  "hari": "Senin",
+  "jam": "10:30:00",
+  "judul_note": "Rapat Tim Tahunan",
+  "description_note": "Membahas progres proyek dan rencana untuk minggu depan."
+}
+```
+Response contoh:
+```json
+{
+    "success": true,
+    "message": "Note berhasil diupdate",
+    "data": {
+        "note": {
+            "idNote": "391866be-...",
+            "idUser": "f12c7399-...",
+            "hari": 4,
+            "jam": "10:00:00",
+            "judulNote": "Rapat penggunaan Uang Perusahaan",
+            "descriptionNote": "Membahas tentang Kemajuan Perusahaan",
+            "createAt": "2025-10-15T18:53:34.945134"
+        }
+    }
+}
+```
+### Delete Note
+- DELETE /note/delete-note/{id-note}
+Request (Bearer token):
+```json
+
+```
+Response contoh:
+```json
+{
+    "success": true,
+    "message": "Note berhasil dihapus",
+    "data": null
+}
+```
+
+### Delete Note
+- DELETE /auth/logout
+Request (Bearer token):
+```json
+
+```
+Response contoh:
+```json
+{
+    "success": true,
+    "message": "Logout successful",
+    "data": null
+}
+```
+
+---
+
 ## 📄 Lisensi
-MIT License – bebas digunakan dan dimodifikasi.
+
+MIT License — bebas digunakan dan dimodifikasi.
+
+--- 
+
+Catatan: Periksa konfigurasi DATABASE_URL dan variabel lingkungan lain sebelum menjalankan aplikasi.
