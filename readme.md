@@ -1,6 +1,6 @@
 # 🛠 AINoteUP / NoteUP
 
-AINoteUP / NoteUP adalah aplikasi web untuk otomatisasi pembuatan catatan harian. Fitur AI belum tersedia saat ini.
+AINoteUP / NoteUP adalah aplikasi web untuk otomatisasi pembuatan catatan harian. Fitur AI belum tersedia saat ini. (Public Endpoint ada di bagian 🔥 API Endpoints )
 
 ---
 
