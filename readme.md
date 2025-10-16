@@ -85,7 +85,7 @@ Base URL: https://ainoteup-backend.vercel.app/api/v1
 Catatan: Gunakan Bearer Token pada header Authorization untuk endpoint yang membutuhkan otentikasi.
 
 ### Register
-- POST /auth/register
+- POST /auth/register <br>
 Request:
 ```json
 {
@@ -109,7 +109,7 @@ Response:
 ```
 
 ### Login
-- POST /auth/login
+- POST /auth/login  <br>
 Request:
 ```json
 {
@@ -128,7 +128,7 @@ Response:
 ```
 
 ### Ambil Semua Note
-- GET /note/
+- GET /note/ <br>
 Request: (Bearer token)
 Response contoh:
 ```json
@@ -153,7 +153,7 @@ Response contoh:
 ```
 
 ### Ambil Detail Note
-- GET /note/detail-note/{id_note}
+- GET /note/detail-note/{id_note}<br>
 Request: (Bearer token)
 Response contoh:
 ```json
@@ -175,7 +175,7 @@ Response contoh:
 ```
 
 ### Tambah Note
-- POST /note/add-note
+- POST /note/add-note<br>
 Request (Bearer token):
 ```json
 {
@@ -205,7 +205,7 @@ Response contoh:
 ```
 
 ### Edit Note
-- PUT /note/edit-note/{id-note}
+- PUT /note/edit-note/{id-note}<br>
 Request (Bearer token):
 ```json
 {
@@ -234,7 +234,7 @@ Response contoh:
 }
 ```
 ### Delete Note
-- DELETE /note/delete-note/{id-note}
+- DELETE /note/delete-note/{id-note}<br>
 Request (Bearer token):
 ```json
 
@@ -248,8 +248,8 @@ Response contoh:
 }
 ```
 
-### Logout Note
-- POST /auth/logout
+### Logout 
+- POST /auth/logout <br>
 Request (Bearer token):
 ```json
 
