@@ -248,8 +248,8 @@ Response contoh:
 }
 ```
 
-### Delete Note
-- DELETE /auth/logout
+### Logout Note
+- POST /auth/logout
 Request (Bearer token):
 ```json
 
